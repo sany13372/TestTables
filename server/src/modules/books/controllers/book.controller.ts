@@ -21,9 +21,10 @@ function buildBookInput(body: Record<string, unknown>): BookInput {
 
 export async function getBooks(req: Request, res: Response): Promise<void> {
   const { limit, offset } = parsePagination(req.query);
+  const authorId = req.query.author_id === undefined ? undefined : parseId(req.query.author_id);
   const [items, total] = await Promise.all([
-    BookModel.list(limit, offset),
-    BookModel.count(),
+    BookModel.list(limit, offset, authorId),
+    BookModel.count(authorId),
   ]);
   res.json({ total, limit, offset, items });
 }

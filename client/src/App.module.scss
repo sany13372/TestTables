@@ -1,0 +1,36 @@
+.layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  background: radial-gradient(circle at 10% 20%, #111827 0%, #0b1120 35%, #020617 100%);
+}
+
+.main {
+  padding: 24px;
+}
+
+.placeholder {
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.95), rgba(2, 6, 23, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.45);
+}
+
+.placeholder header h1 {
+  color: white;
+}
+
+.placeholder p {
+  color: #94a3b8;
+}
+
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .main {
+    padding: 16px;
+  }
+}

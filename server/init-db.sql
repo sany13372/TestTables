@@ -11,7 +11,7 @@ CREATE TABLE authors (
     id           SERIAL       PRIMARY KEY,        
     full_name    VARCHAR(150) NOT NULL,           
     birth_date   DATE         NOT NULL,           
-    rating       NUMERIC(3, 2) NOT NULL DEFAULT 0,
+    rating       NUMERIC(3, 2) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE books (
@@ -44,3 +44,24 @@ INSERT INTO books (author_id, title, published_date, price, pages) VALUES
     (3, 'Вишнёвый сад',           '1904-01-01',  320.00,  120),
     (4, 'Мастер и Маргарита',     '1967-01-01',  950.00,  480),
     (5, 'Евгений Онегин',         '1833-01-01',  540.00,  240);
+
+INSERT INTO authors (full_name, birth_date, rating)
+SELECT
+  'Тестовый автор #' || gs,
+  DATE '1950-01-01' + ((gs * 13) % 20000),
+  ROUND((1 + (gs % 5) + (gs % 100) / 100.0)::numeric, 2)
+FROM generate_series(6, 260) AS gs;
+
+INSERT INTO books (author_id, title, published_date, price, pages)
+SELECT
+  a.id,
+  'Книга ' || n.num || ' автора #' || a.id,
+  DATE '1990-01-01' + ((a.id * n.num * 7) % 12000),
+  ROUND((150 + ((a.id * n.num) % 2500))::numeric, 2),
+  100 + ((a.id * n.num) % 900)
+FROM authors a
+JOIN LATERAL (
+  SELECT gs AS num
+  FROM generate_series(1, CASE WHEN a.id % 3 = 0 THEN 4 ELSE 2 END) AS gs
+) AS n ON true
+WHERE a.id >= 6;

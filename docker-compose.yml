@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: library-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: library
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d library']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: ./server
+    container_name: library-server
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: library
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      PORT: 3000
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  client:
+    build:
+      context: ./client
+    container_name: library-client
+    environment:
+      VITE_API_URL: /api
+      VITE_API_PROXY_TARGET: http://server:3000
+      VITE_PORT: 5173
+    ports:
+      - '5173:5173'
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:

@@ -1,0 +1,81 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 23, 0.68);
+  z-index: 20;
+}
+
+.modal {
+  width: min(500px, 92vw);
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.modal h3 {
+  margin: 0;
+  color: #f8fafc;
+}
+
+.subtitle {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.form {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.form label {
+  display: grid;
+  gap: 6px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.form input {
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #020617;
+  color: #f8fafc;
+  padding: 9px 10px;
+}
+
+.error {
+  color: #fca5a5;
+  font-size: 12px;
+}
+
+.submitError {
+  margin: 0;
+  background: rgba(239, 68, 68, 0.15);
+  color: #fecaca;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.actions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: white;
+  background: #3b82f6;
+  cursor: pointer;
+}
+
+.ghost {
+  background: #334155 !important;
+}

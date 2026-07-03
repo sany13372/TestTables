@@ -76,7 +76,7 @@ async function ensureAuthorExists(authorId: number): Promise<void> {
 }
 
 export const BookModel = {
-  async list(limit: number, offset: number): Promise<Book[]> {
+  async list(limit: number, offset: number, authorId?: number): Promise<Book[]> {
     return sequelize.query<Book>(
       `SELECT b.id,
               b.author_id,
@@ -87,16 +87,19 @@ export const BookModel = {
               a.full_name AS author_name
          FROM books b
          JOIN authors a ON a.id = b.author_id
+        WHERE (:authorId::int IS NULL OR b.author_id = :authorId)
         ORDER BY b.id
         LIMIT :limit OFFSET :offset`,
-      { replacements: { limit, offset }, type: QueryTypes.SELECT }
+      { replacements: { limit, offset, authorId: authorId ?? null }, type: QueryTypes.SELECT }
     );
   },
 
-  async count(): Promise<number> {
+  async count(authorId?: number): Promise<number> {
     const rows = await sequelize.query<{ total: number }>(
-      `SELECT COUNT(*)::int AS total FROM books`,
-      { type: QueryTypes.SELECT }
+      `SELECT COUNT(*)::int AS total
+         FROM books
+        WHERE (:authorId::int IS NULL OR author_id = :authorId)`,
+      { replacements: { authorId: authorId ?? null }, type: QueryTypes.SELECT }
     );
     return rows[0].total;
   },
